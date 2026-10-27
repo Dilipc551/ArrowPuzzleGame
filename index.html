@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f3eee6">
+  <meta name="description" content="Arrow Escape is a quiet puzzle. Clear the board by letting each arrow leave when its path is open.">
+  <title>Arrow Escape</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='12' fill='%23efeae2'/%3E%3Cpath fill='%230f6e56' d='M24 6l14 16h-7v16h-14V22H10L24 6z'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="live" class="sr-only" role="status" aria-live="polite"></div>
+  <div id="toast" class="toast" aria-hidden="true"></div>
+
+  <div class="app">
+    <button id="mute-btn" class="icon-btn sound-toggle" type="button" aria-pressed="false" aria-label="Mute sound effects">
+      <svg class="icon-on" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M4 9.2h3.1L11.8 5v14l-4.7-4.2H4V9.2z"/>
+        <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M15.2 9a3.4 3.4 0 0 1 0 6M17.4 6.8a6.2 6.2 0 0 1 0 10.4"/>
+      </svg>
+      <svg class="icon-off" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M4 9.2h3.1L11.8 5v14l-4.7-4.2H4V9.2z"/>
+        <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M16 9.5l5 5M21 9.5l-5 5"/>
+      </svg>
+    </button>
+
+    <section id="home-screen" class="screen" data-screen="home">
+      <div class="hero">
+        <div class="logo-mark" aria-hidden="true">
+          <span class="mini up">
+            <svg viewBox="0 0 48 48"><path fill="currentColor" d="M24 3.5 41 20.5h-8.2V44H15.2V20.5H7L24 3.5z"/></svg>
+          </span>
+          <span class="mini right">
+            <svg viewBox="0 0 48 48"><path fill="currentColor" d="M24 3.5 41 20.5h-8.2V44H15.2V20.5H7L24 3.5z"/></svg>
+          </span>
+          <span class="mini left">
+            <svg viewBox="0 0 48 48"><path fill="currentColor" d="M24 3.5 41 20.5h-8.2V44H15.2V20.5H7L24 3.5z"/></svg>
+          </span>
+          <span class="mini down">
+            <svg viewBox="0 0 48 48"><path fill="currentColor" d="M24 3.5 41 20.5h-8.2V44H15.2V20.5H7L24 3.5z"/></svg>
+          </span>
+        </div>
+        <p class="eyebrow">A quiet puzzle</p>
+        <h1>Arrow Escape</h1>
+        <p class="lede">Tap an arrow. It leaves when the path ahead is empty.</p>
+        <div class="home-actions">
+          <button id="play-btn" class="btn btn-primary btn-large" type="button">
+            <span id="play-label">Play</span>
+            <span id="play-sub">Level 1 · First Flight</span>
+          </button>
+        </div>
+        <div class="home-links">
+          <button id="levels-btn" class="text-btn" type="button">Levels</button>
+          <button id="help-btn" class="text-btn" type="button">How to play</button>
+        </div>
+        <div class="meter" data-progress aria-hidden="true"><span></span></div>
+        <p id="home-progress" class="fine-print">0 of 12 levels cleared</p>
+      </div>
+    </section>
+
+    <section id="levels-screen" class="screen" data-screen="levels" hidden>
+      <header class="page-bar">
+        <button id="levels-back" class="text-btn" type="button">Home</button>
+        <div>
+          <p class="eyebrow">Arrow Escape</p>
+          <h1>Levels</h1>
+        </div>
+        <span class="game-bar-spacer" aria-hidden="true"></span>
+      </header>
+      <div class="meter meter-wide" data-progress aria-hidden="true"><span></span></div>
+      <p id="levels-progress" class="fine-print levels-lead">Clear a level to unlock the next one.</p>
+      <div id="level-grid" class="level-grid" role="list"></div>
+    </section>
+
+    <section id="help-screen" class="screen" data-screen="help" hidden>
+      <header class="page-bar">
+        <button id="help-back" class="text-btn" type="button">Home</button>
+        <div>
+          <p class="eyebrow">Arrow Escape</p>
+          <h1>How to play</h1>
+        </div>
+        <span class="game-bar-spacer" aria-hidden="true"></span>
+      </header>
+      <ol class="steps">
+        <li>
+          <span class="step-num">1</span>
+          <div>
+            <h2>Read the arrow</h2>
+            <p>Every tile points up, down, left, or right. That is the only direction it can travel.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">2</span>
+          <div>
+            <h2>Send it out</h2>
+            <p>Tap an arrow. If every square in front of it is empty, it slides off the board and is gone.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">3</span>
+          <div>
+            <h2>If it shakes, wait</h2>
+            <p>Another arrow is in the way. It cannot jump over or pass through. Remove the one in front first.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">4</span>
+          <div>
+            <h2>Clear the board</h2>
+            <p>When the last arrow leaves, the level is complete and the next one unlocks. Hint marks an arrow that can leave right now. Restart puts the current level back to the start. An arrow that leaves is worth 10 points, finishing the level adds 100, and a hint costs 20. The score stays at zero or above, and restarting starts that level's score over.</p>
+          </div>
+        </li>
+      </ol>
+      <div class="help-extra">
+        <h2>Keys</h2>
+        <ul class="key-list">
+          <li><kbd>Arrow keys</kbd> move between arrows</li>
+          <li><kbd>Enter</kbd> releases the selected arrow</li>
+          <li id="help-mute-key"><kbd>H</kbd> hint · <kbd>R</kbd> restart · <kbd>M</kbd> mute</li>
+          <li><kbd>Esc</kbd> goes back</li>
+        </ul>
+        <p id="help-sound-note">Sound is optional. Use the speaker button in the corner. Your unlocked levels are saved in this browser only.</p>
+        <button id="reset-btn" class="text-btn danger-text" type="button">Erase saved progress</button>
+      </div>
+    </section>
+
+    <section id="game-screen" class="screen" data-screen="game" hidden>
+      <header class="game-bar">
+        <button id="back-btn" class="text-btn" type="button" aria-keyshortcuts="Escape">Levels</button>
+        <div class="game-heading">
+          <p class="eyebrow">Level <span id="level-num">1</span> of 12</p>
+          <h1 id="level-name">First Flight</h1>
+        </div>
+        <span class="game-bar-spacer" aria-hidden="true"></span>
+      </header>
+
+      <div class="status">
+        <p id="counter" class="counter">5 arrows left</p>
+        <p id="score-line" class="score-line">Score 0</p>
+      </div>
+      <p class="rule">An arrow leaves only when nothing is in its path.</p>
+
+      <div class="board-stage">
+        <div class="board-wrap" id="board-wrap">
+          <div id="board" class="board" role="group" aria-label="Puzzle board" tabindex="-1"></div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="hint-btn" class="btn btn-soft" type="button" aria-keyshortcuts="H">Hint</button>
+        <button id="restart-btn" class="btn btn-ghost" type="button" aria-keyshortcuts="R">Restart</button>
+      </div>
+      <p id="game-keys" class="keys fine-print">Arrow keys select · Enter releases · H hint · R restart · M mute</p>
+    </section>
+  </div>
+
+  <div id="win-modal" class="modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="win-title">
+      <div class="success-mark" aria-hidden="true">
+        <svg viewBox="0 0 48 48">
+          <circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="2.5"/>
+          <path d="M15 24.5l6 6 12-13" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <p class="eyebrow" id="win-kicker">Level cleared</p>
+      <h2 id="win-title">First Flight</h2>
+      <p id="win-copy">Every arrow found a way out.</p>
+      <p id="win-score" class="win-score">Score 0</p>
+      <p id="win-best" class="win-best" hidden>Best 0</p>
+      <div class="modal-actions">
+        <button id="win-next" class="btn btn-primary" type="button">Next level</button>
+        <button id="win-replay" class="btn btn-ghost" type="button">Replay</button>
+        <button id="win-levels" class="btn btn-ghost" type="button">All levels</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="pause-overlay" class="pause-overlay" hidden>
+    <p class="pause-card">Paused</p>
+  </div>
+
+  <noscript>
+    <p class="noscript">Arrow Escape needs JavaScript. Turn it on in your browser, then reload this page.</p>
+  </noscript>
+  <script src="https://www.youtube.com/game_api/v1"></script>
+  <script src="game.js"></script>
+</body>
+</html>
